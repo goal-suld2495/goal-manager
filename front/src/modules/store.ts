@@ -1,14 +1,12 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 import { all } from 'redux-saga/effects';
 
-const rootReducer = combineReducers({
-  
-});
+const rootReducer = combineReducers({});
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export function *rootSaga() {
+export function* rootSaga() {
   yield all([]);
-} 
+}
 
 export default rootReducer;
