@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, EventHandler, useState } from 'react';
 import styled from 'styled-components';
 
 const MemoFormBlock = styled.form``;
@@ -10,26 +10,12 @@ interface Memo {
 
 type MemoFormProps = {
   onSubmit: (form: Memo) => void;
+  onChange: EventHandler<ChangeEvent>;
+  form: Memo;
 };
 
-const MemoForm = ({ onSubmit }: MemoFormProps) => {
-  const [form, setForm] = useState({
-    title: '',
-    content: '',
-  });
-
-  const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
+const MemoForm = ({ onSubmit, form, onChange }: MemoFormProps) => {
   const onClick = () => {
-    if (!form.title || !form.content) {
-      return;
-    }
-
     onSubmit(form);
   };
 

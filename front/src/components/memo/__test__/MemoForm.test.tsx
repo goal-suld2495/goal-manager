@@ -3,8 +3,14 @@ import userEvent from '@testing-library/user-event';
 import MemoForm from '../MemoForm';
 
 describe('MemoForm', () => {
+  const emptyFn = () => {};
+  const form = {
+    title: '',
+    content: '',
+  };
+
   it('render default ui', () => {
-    render(<MemoForm onSubmit={() => {}} />);
+    render(<MemoForm onSubmit={emptyFn} onChange={emptyFn} form={form} />);
     expect(screen.getByLabelText('제목')).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText('내용을 입력해 주세요.')
@@ -12,34 +18,41 @@ describe('MemoForm', () => {
     expect(screen.getByRole('button', { name: '생성' })).toBeInTheDocument();
   });
 
-  it('타이틀 및 내용을 작성하지 않은 경우 전송 기능이 호출 되지 않는다.', () => {
+  it('사용자가 제목과 내용 인풋에 값을 입력하면 onChnage 함수가 호출된다', () => {
     const fn = jest.fn();
-    render(<MemoForm onSubmit={fn} />);
+    render(<MemoForm onSubmit={emptyFn} onChange={fn} form={form} />);
 
-    const button = screen.getByRole('button', { name: '생성' });
-    userEvent.click(button);
-
-    expect(fn).not.toHaveBeenCalled();
-  });
-
-  it('전송 시 파라미터는 사용자가 입력한 타이틀과 내용입니다.', () => {
-    const fn = jest.fn();
-    render(<MemoForm onSubmit={fn} />);
-
-    const form = {
-      title: '여기는 제목입니다.',
-      content: '여기는 내용입니다.',
-    };
+    const title = '제목';
+    const content = '제목';
 
     const titleInput = screen.getByLabelText('제목');
-    userEvent.type(titleInput, form.title);
-
     const contentInput = screen.getByPlaceholderText('내용을 입력해 주세요.');
-    userEvent.type(contentInput, form.content);
+
+    userEvent.type(titleInput, title);
+    userEvent.type(contentInput, content);
+
+    expect(fn).toHaveBeenCalledTimes(title.length + content.length);
+  });
+
+  it('받아온 폼 데이터를 인풋에 출력한다.', () => {
+    const inputForm = {
+      title: '타이틀',
+      content: '내용',
+    };
+
+    render(<MemoForm onSubmit={emptyFn} onChange={emptyFn} form={inputForm} />);
+
+    expect(screen.getByDisplayValue(inputForm.title)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(inputForm.content)).toBeInTheDocument();
+  });
+
+  it('사용자가 생성 버튼을 클릭 시 전송 기능이 호출된다.', () => {
+    const fn = jest.fn();
+    render(<MemoForm onSubmit={fn} onChange={emptyFn} form={form} />);
 
     const button = screen.getByRole('button', { name: '생성' });
     userEvent.click(button);
 
-    expect(fn).toHaveBeenCalledWith(form);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });
