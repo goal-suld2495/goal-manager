@@ -9,16 +9,12 @@ interface Memo {
 }
 
 type MemoFormProps = {
-  onSubmit: (form: Memo) => void;
-  onChange: EventHandler<ChangeEvent>;
+  onSubmit: EventHandler<React.MouseEvent>;
+  onChange: EventHandler<React.ChangeEvent>;
   form: Memo;
 };
 
 const MemoForm = ({ onSubmit, form, onChange }: MemoFormProps) => {
-  const onClick = () => {
-    onSubmit(form);
-  };
-
   return (
     <MemoFormBlock>
       <div className="title">
@@ -40,7 +36,7 @@ const MemoForm = ({ onSubmit, form, onChange }: MemoFormProps) => {
         />
       </div>
       <div className="buttons">
-        <button type="button" onClick={onClick}>
+        <button type="button" onClick={onSubmit}>
           생성
         </button>
       </div>
