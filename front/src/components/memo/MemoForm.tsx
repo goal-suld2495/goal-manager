@@ -8,7 +8,7 @@ interface Memo {
   content: string;
 }
 
-type MemoFormProps = {
+export type MemoFormProps = {
   onSubmit: EventHandler<React.MouseEvent>;
   onChange: EventHandler<React.ChangeEvent>;
   form: Memo;

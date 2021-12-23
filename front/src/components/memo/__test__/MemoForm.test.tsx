@@ -1,16 +1,23 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MemoForm from '../MemoForm';
+import MemoForm, { MemoFormProps } from '../MemoForm';
 
 describe('MemoForm', () => {
-  const emptyFn = () => {};
-  const form = {
-    title: '',
-    content: '',
+  const setup = (props: Partial<MemoFormProps> = {}) => {
+    const initialProps: MemoFormProps = {
+      onSubmit: () => {},
+      onChange: () => {},
+      form: {
+        title: '',
+        content: '',
+      },
+    };
+
+    return render(<MemoForm {...initialProps} {...props} />);
   };
 
   it('render default ui', () => {
-    render(<MemoForm onSubmit={emptyFn} onChange={emptyFn} form={form} />);
+    setup();
     expect(screen.getByLabelText('제목')).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText('내용을 입력해 주세요.')
@@ -20,7 +27,9 @@ describe('MemoForm', () => {
 
   it('사용자가 제목과 내용 인풋에 값을 입력하면 onChnage 함수가 호출된다', () => {
     const fn = jest.fn();
-    render(<MemoForm onSubmit={emptyFn} onChange={fn} form={form} />);
+    setup({
+      onChange: fn,
+    });
 
     const title = '제목';
     const content = '제목';
@@ -40,7 +49,9 @@ describe('MemoForm', () => {
       content: '내용',
     };
 
-    render(<MemoForm onSubmit={emptyFn} onChange={emptyFn} form={inputForm} />);
+    setup({
+      form: inputForm,
+    });
 
     expect(screen.getByDisplayValue(inputForm.title)).toBeInTheDocument();
     expect(screen.getByDisplayValue(inputForm.content)).toBeInTheDocument();
@@ -48,7 +59,9 @@ describe('MemoForm', () => {
 
   it('사용자가 생성 버튼을 클릭 시 전송 기능이 호출된다.', () => {
     const fn = jest.fn();
-    render(<MemoForm onSubmit={fn} onChange={emptyFn} form={form} />);
+    setup({
+      onSubmit: fn,
+    });
 
     const button = screen.getByRole('button', { name: '생성' });
     userEvent.click(button);
