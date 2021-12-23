@@ -1,4 +1,4 @@
-import React, { ChangeEvent, EventHandler, useState } from 'react';
+import React, { EventHandler } from 'react';
 import styled from 'styled-components';
 
 const MemoFormBlock = styled.form``;
