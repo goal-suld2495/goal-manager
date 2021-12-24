@@ -66,6 +66,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "history": "^5.0.0",
+    "jest-mock": "^27.4.2",
     "pre-commit": "^1.2.2",
     "prettier": "^2.5.0",
     "prettier-eslint": "^13.0.0",

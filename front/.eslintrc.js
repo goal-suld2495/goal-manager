@@ -38,6 +38,7 @@ module.exports = {
       {
         singleQuote: true,
         endOfLine: 'auto',
+        tailingComma: 'all'
       },
     ],
     'react/function-component-definition': [
@@ -63,12 +64,8 @@ module.exports = {
         },
       },
     ],
-    'jsx-quotes': [2, 'prefer-single'],
-    '@typescript-eslint/comma-dangle': [
-      'error',
-      {
-        functions: 'never',
-      },
-    ],
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": 0,
+    "react/jsx-props-no-spreading": "off",
   },
 };

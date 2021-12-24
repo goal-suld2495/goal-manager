@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemoWriteContainer render UI 1`] = `
+<div>
+  <form
+    class="sc-bdvvtL"
+  >
+    <div
+      class="title"
+    >
+      <label
+        for="title"
+      >
+        제목
+      </label>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="content"
+    >
+      <textarea
+        name="content"
+        placeholder="내용을 입력해 주세요."
+      />
+    </div>
+    <div
+      class="buttons"
+    >
+      <button
+        type="button"
+      >
+        생성
+      </button>
+    </div>
+  </form>
+</div>
+`;

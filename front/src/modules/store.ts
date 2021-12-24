@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
 import { all } from 'redux-saga/effects';
+import memo from './memo';
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  memo,
+});
 
 export type RootState = ReturnType<typeof rootReducer>;
 
