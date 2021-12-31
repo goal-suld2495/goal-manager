@@ -1,7 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan';
 import * as matchers from 'redux-saga-test-plan/matchers';
-import { throwError } from 'redux-saga-test-plan/providers';
 import memo, * as memoActions from '../memo';
+import * as memoApi from '../../lib/api/memo';
 
 describe('memo', () => {
   const getInitialState = () => memo(undefined, {} as never);
@@ -13,18 +13,12 @@ describe('memo', () => {
     it('액션 생성 함수', () => {
       const expectedActions = [
         {
-          type: 'memo/SAVE_MEMO',
-        },
-        {
           type: 'memo/SET_FORM',
           payload: { title: '제목', content: '내용' },
         },
       ];
 
-      const actions = [
-        memoActions.saveMemo(),
-        memoActions.setForm({ title: '제목', content: '내용' }),
-      ];
+      const actions = [memoActions.setForm({ title: '제목', content: '내용' })];
 
       expect(actions).toEqual(expectedActions);
     });
@@ -40,18 +34,28 @@ describe('memo', () => {
       ...option,
     });
 
-    // TODO
-    // 메모 저장 리듀서 테스트 코드 추가
-    // it('메모를 저장한다.', () => {
-    //   const form = getForm();
-    //   const state = getInitialState();
+    it('메모를 저장한다.', () => {
+      const form = getForm();
+      const memoData = { id: '아이디', ...form };
+      const state = getInitialState();
 
-    //   const response = axiosResponse('', 200);
+      const response = axiosResponse(memoData, 200, {});
 
-    //   return expectSaga(memoActions.saveMemo)
-    //     .withReducer(memo)
-    //     .provide([[matchers.call.fn(memoAPI.saveMemo), response]]);
-    // });
+      return expectSaga(memoActions.memoSaga)
+        .dispatch(memoActions.saveMemoAsync.request(form))
+        .provide([[matchers.call.fn(memoApi.saveMemo), response]])
+        .put({
+          type: 'memo/SAVE_MEMO_SUCCESS',
+          payload: memoData,
+          meta: response,
+        })
+        .withReducer(memoActions.default)
+        .hasFinalState({
+          ...state,
+          memo: memoData,
+        })
+        .silentRun();
+    });
   });
 
   describe('reducer', () => {
