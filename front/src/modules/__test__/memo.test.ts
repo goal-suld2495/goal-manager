@@ -66,6 +66,10 @@ describe('memo', () => {
           title: '',
           content: '',
         },
+        memo: {
+          id: '',
+          title: '',
+        },
       });
     });
 
