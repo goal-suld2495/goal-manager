@@ -1,16 +1,16 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
 import { mocked } from 'jest-mock';
+import userEvent from '@testing-library/user-event';
 import MemoWriteContainer from '../MemoWriteContainer';
-import * as MemoStore from '../../../modules/memo';
-import renderWithRedux from '../../../utils/renderWithRedux';
+import renderWithRedux from '../../../utils/test/renderWithRedux';
+import * as memoAPI from '../../../lib/api/memo';
 
-jest.mock('../../../modules/Memo');
-const mockedMemoStore = mocked(MemoStore, true);
+jest.mock('../../../lib/api/memo');
+const mockedMemoApi = mocked(memoAPI, true);
 
 describe('MemoWriteContainer', () => {
   const setup = () => {
-    return renderWithRedux(<MemoWriteContainer />, null);
+    return renderWithRedux(<MemoWriteContainer />);
   };
 
   it('render UI', () => {
@@ -22,19 +22,28 @@ describe('MemoWriteContainer', () => {
     global.alert = jest.fn();
     setup();
 
-    mockedMemoStore.saveMemo.mockImplementation(() => {});
-
     const button = screen.getByRole('button', { name: '생성' });
     userEvent.click(button);
 
     expect(global.alert).toHaveBeenCalledTimes(1);
-    expect(mockedMemoStore.saveMemo).not.toHaveBeenCalled();
   });
 
-  it('제목과 내용을 입력 후 생성 버튼을 클릭 시, 메모 저장 액션을 호출한다.', () => {
-    setup();
+  it('성공적으로 저장하는 경우 작성한 게시글 뷰어 페이지로 이동한다', async () => {
+    mockedMemoApi.saveMemo.mockImplementation(() => {
+      return Promise.resolve({
+        data: {
+          title: '제목',
+          content: '내용',
+          id: '100',
+        },
+        status: 200,
+        statusText: '',
+        headers: '',
+        config: {},
+      });
+    });
 
-    mockedMemoStore.saveMemo.mockImplementation(() => {});
+    setup();
 
     const titleInput = screen.getByLabelText('제목');
     const contentInput = screen.getByPlaceholderText('내용을 입력해 주세요.');
@@ -42,11 +51,13 @@ describe('MemoWriteContainer', () => {
     userEvent.type(titleInput, '제목');
     userEvent.type(contentInput, '내용');
 
-    expect(mockedMemoStore.saveMemo).toHaveBeenCalledTimes(1);
-  });
-  // TODO
-  // 저장에 관련 된 리덕스 액션 호출 여부 확인
+    const button = screen.getByRole('button', { name: '생성' });
+    userEvent.click(button);
 
+    await waitFor(() => {
+      expect(global.location.pathname).toBe('/memos/100');
+    });
+  });
   // TODO
   // 저장 액션을 성공적으로 수행했다면 게시글 뷰어페이지로 이동
 
