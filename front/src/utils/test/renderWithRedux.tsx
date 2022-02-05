@@ -1,11 +1,20 @@
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { createStore } from 'redux';
-import rootReducer, { RootState } from '../../modules/store';
+import { applyMiddleware, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import rootReducer, { rootSaga, RootState } from '../../modules/store';
 
 function renderWithRedux(ui: React.ReactNode, initialState?: RootState) {
-  const store = createStore(rootReducer, initialState);
+  const sagaMiddleware = createSagaMiddleware();
+  const store = createStore(
+    rootReducer,
+    initialState,
+    applyMiddleware(sagaMiddleware)
+  );
+
+  sagaMiddleware.run(rootSaga);
+
   const utils = render(
     <Provider store={store}>
       <MemoryRouter>{ui}</MemoryRouter>
