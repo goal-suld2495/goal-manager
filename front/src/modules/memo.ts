@@ -44,6 +44,7 @@ type MemoAction = ActionType<typeof actions>;
 export interface MemoState {
   form: Form;
   memo: Memo;
+  memoError: Error | null;
 }
 
 export const initialState: MemoState = {
@@ -55,6 +56,7 @@ export const initialState: MemoState = {
     id: '',
     title: '',
   },
+  memoError: null,
 };
 
 const memo = createReducer<MemoState, MemoAction>(initialState)
@@ -65,6 +67,10 @@ const memo = createReducer<MemoState, MemoAction>(initialState)
   .handleAction(saveMemoAsync.success, (state, { payload: memoData }) => ({
     ...state,
     memo: memoData,
+  }))
+  .handleAction(saveMemoAsync.failure, (state, { payload: memoError }) => ({
+    ...state,
+    memoError,
   }));
 
 export default memo;

@@ -1,5 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan';
 import * as matchers from 'redux-saga-test-plan/matchers';
+import { throwError } from 'redux-saga-test-plan/providers';
 import memo, * as memoActions from '../memo';
 import * as memoApi from '../../lib/api/memo';
 
@@ -56,6 +57,26 @@ describe('memo', () => {
         })
         .silentRun();
     });
+
+    it('메모 저장에 실패한다.', () => {
+      const form = getForm();
+      const error = new Error('Fail Save');
+      const state = getInitialState();
+
+      return expectSaga(memoActions.memoSaga)
+        .dispatch(memoActions.saveMemoAsync.request(form))
+        .provide([[matchers.call.fn(memoApi.saveMemo), throwError(error)]])
+        .put({
+          type: 'memo/SAVE_MEMO_FAILURE',
+          payload: error,
+        })
+        .withReducer(memoActions.default)
+        .hasFinalState({
+          ...state,
+          memoError: error,
+        })
+        .silentRun();
+    });
   });
 
   describe('reducer', () => {
@@ -70,6 +91,7 @@ describe('memo', () => {
           id: '',
           title: '',
         },
+        memoError: null,
       });
     });
 

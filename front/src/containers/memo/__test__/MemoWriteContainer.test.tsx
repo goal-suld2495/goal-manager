@@ -18,14 +18,15 @@ describe('MemoWriteContainer', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('생성 버튼을 클릭했을 때, 제목 또는 내용을 입력하지 않은 경우 경고창을 출력한다.', () => {
-    global.alert = jest.fn();
+  it('생성 버튼을 클릭했을 때, 제목 또는 내용을 입력하지 않은 경우 경고창을 출력한다.', async () => {
     setup();
 
     const button = screen.getByRole('button', { name: '생성' });
     userEvent.click(button);
 
-    expect(global.alert).toHaveBeenCalledTimes(1);
+    expect(
+      await screen.findByText('제목 또는 내용을 입력하세요.')
+    ).toBeInTheDocument();
   });
 
   it('성공적으로 저장하는 경우 작성한 게시글 뷰어 페이지로 이동한다', async () => {
@@ -58,9 +59,28 @@ describe('MemoWriteContainer', () => {
       expect(global.location.pathname).toBe('/memos/100');
     });
   });
-  // TODO
-  // 저장 액션을 성공적으로 수행했다면 게시글 뷰어페이지로 이동
 
-  // TODO
-  // 저장 액션에 실패했다면 관련 된 모달 출력
+  it('저장 액션에 실패했다면 실패와 관련된 에러 메시지를 출력한다.', async () => {
+    mockedMemoApi.saveMemo.mockRejectedValue({
+      data: {
+        error: true,
+      },
+      status: 401,
+    });
+
+    setup();
+
+    const titleInput = screen.getByLabelText('제목');
+    const contentInput = screen.getByPlaceholderText('내용을 입력해 주세요.');
+
+    userEvent.type(titleInput, '제목');
+    userEvent.type(contentInput, '내용');
+
+    const button = screen.getByRole('button', { name: '생성' });
+    userEvent.click(button);
+
+    expect(
+      await screen.findByText('저장에 실패하였습니다.')
+    ).toBeInTheDocument();
+  });
 });
