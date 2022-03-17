@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 // import reportWebVitals from './reportWebVitals';
 import store from './modules';
 import App from './App';
+import 'antd/dist/antd.css';
 import './index.css';
 
 ReactDOM.render(

@@ -1,7 +1,54 @@
 import React, { EventHandler } from 'react';
 import styled from 'styled-components';
 
-const MemoFormBlock = styled.form``;
+const MemoFormBlock = styled.form`
+  height: 100vh;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  .title {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  .title label {
+    margin-bottom: 10px;
+    font-size: var(--label-font-size);
+    color: var(--label-color);
+  }
+  .title input {
+    border: none;
+    border-bottom: 1px solid #bbb;
+    outline: none;
+    transition: border 0.3s ease;
+    font-size: var(--label-font-size);
+  }
+  .title input:focus {
+    border-bottom: 1px solid #707070;
+  }
+  .content {
+    flex: 1;
+  }
+  .content textarea {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    background: #e5e5e5;
+    font-size: var(--label-font-size);
+    outline: none;
+    transition: border 0.3s ease;
+    resize: none;
+  }
+  .content textarea:focus {
+    border: 1px solid #a9a9a9;
+  }
+  .buttons {
+    margin-top: 20px;
+  }
+`;
 
 interface Memo {
   title: string;
@@ -10,7 +57,9 @@ interface Memo {
 
 export type MemoFormProps = {
   onSubmit: EventHandler<React.MouseEvent>;
-  onChange: EventHandler<React.ChangeEvent>;
+  onChange: EventHandler<
+    React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  >;
   form: Memo;
 };
 
