@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    browser: true,
+    node: true,
     es2020: true,
     jest: true,
   },
@@ -64,8 +64,16 @@ module.exports = {
         },
       },
     ],
-    "comma-dangle": "off",
-    "@typescript-eslint/comma-dangle": 0,
-    "react/jsx-props-no-spreading": "off",
+    'jest/expect-expect': [
+      "error", 
+      { 
+        "assertFunctionNames": ["expect", "expectSaga"] 
+      }
+    ],
+    'comma-dangle': 'off',
+    '@typescript-eslint/comma-dangle': 0,
+    'react/jsx-props-no-spreading': 'off',
+    '@typescript-eslint/indent': 0,
+    'operator-linebreak': 'off',
   },
 };
