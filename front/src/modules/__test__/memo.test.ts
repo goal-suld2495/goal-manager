@@ -90,6 +90,7 @@ describe('memo', () => {
         memo: {
           id: '',
           title: '',
+          content: '',
         },
         memoError: null,
       });

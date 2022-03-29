@@ -55,6 +55,7 @@ export const initialState: MemoState = {
   memo: {
     id: '',
     title: '',
+    content: '',
   },
   memoError: null,
 };
