@@ -1,9 +1,7 @@
-const App = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+import MemoWrite from './pages/MemoWrite';
 
-export default App
+const App = () => {
+  return <MemoWrite />;
+};
+
+export default App;
