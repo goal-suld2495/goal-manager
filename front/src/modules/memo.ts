@@ -16,6 +16,8 @@ import {
 const [SAVE_MEMO, SAVE_MEMO_SUCCESS, SAVE_MEMO_FAILURE] =
   createRequestActionNames('memo/SAVE_MEMO');
 const SET_FORM = 'memo/SET_FORM';
+const [FETCH_MEMO, FETCH_MEMO_SUCCESS, FETCH_MEMO_FAILURE] =
+  createRequestActionNames('memo/FETCH_MEMO');
 
 export const saveMemoAsync = createAsyncAction(
   SAVE_MEMO,
@@ -28,14 +30,25 @@ export const setForm = createAction(
   (payload: MemoState['form']) => payload
 )();
 
+export const fetchMemoAsync = createAsyncAction(
+  FETCH_MEMO,
+  FETCH_MEMO_SUCCESS,
+  FETCH_MEMO_FAILURE
+)<MemoState['memo']['id'], [Memo, AxiosResponse], Error>();
+
 export const saveMemoSaga = createAsyncSaga(saveMemoAsync, memoApi.saveMemo);
+export const fetchMemoSaga = createAsyncSaga(fetchMemoAsync, memoApi.fetchMemo);
 
 export function* memoSaga() {
   yield takeLatest(SAVE_MEMO, saveMemoSaga);
+  yield takeLatest(FETCH_MEMO, fetchMemoSaga);
 }
 
 const actions = {
-  ...saveMemoAsync,
+  [SAVE_MEMO_SUCCESS]: saveMemoAsync.success,
+  [SAVE_MEMO_FAILURE]: saveMemoAsync.failure,
+  [FETCH_MEMO_SUCCESS]: fetchMemoAsync.success,
+  [FETCH_MEMO_FAILURE]: fetchMemoAsync.failure,
   setForm,
 };
 
@@ -60,16 +73,27 @@ export const initialState: MemoState = {
   memoError: null,
 };
 
+// TODO
+// async 액션에 대한 타입 설정 하기
+// 현재 succss, failure라는 이름으로 들어가서 하나의 async 액션만 들어감
 const memo = createReducer<MemoState, MemoAction>(initialState)
   .handleAction(setForm, (state, { payload: form }) => ({
     ...state,
     form,
   }))
-  .handleAction(saveMemoAsync.success, (state, { payload: memoData }) => ({
+  .handleAction(SAVE_MEMO_SUCCESS, (state, { payload: memoData }) => ({
     ...state,
     memo: memoData,
   }))
   .handleAction(saveMemoAsync.failure, (state, { payload: memoError }) => ({
+    ...state,
+    memoError,
+  }))
+  .handleAction(fetchMemoAsync.success, (state, { payload: memoData }) => ({
+    ...state,
+    memo: memoData,
+  }))
+  .handleAction(fetchMemoAsync.failure, (state, { payload: memoError }) => ({
     ...state,
     memoError,
   }));
