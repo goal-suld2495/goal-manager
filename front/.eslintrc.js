@@ -18,7 +18,7 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json'],
   },
-  plugins: ['prettier', 'jsx-a11y', '@typescript-eslint', 'jest', 'jest-react'],
+  plugins: ['jsx-a11y', '@typescript-eslint', 'jest', 'jest-react'],
   rules: {
     '@typescript-eslint/no-empty-function': [
       'error',
@@ -33,14 +33,6 @@ module.exports = {
     'arrow-body-style': 0,
     'linebreak-style': 0,
     'react/react-in-jsx-scope': 0,
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        endOfLine: 'auto',
-        tailingComma: 'all'
-      },
-    ],
     'react/function-component-definition': [
       2,
       {
@@ -75,5 +67,10 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/indent': 0,
     'operator-linebreak': 'off',
+    'object-curly-newline': 0,
+    'implicit-arrow-linebreak': 0,
+    'function-paren-newline': 0,
+    'import/no-extraneous-dependencies': 0,
+    'react/prop-types': 0,
   },
 };

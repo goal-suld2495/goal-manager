@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { mocked } from 'jest-mock';
 import userEvent from '@testing-library/user-event';
 import MemoWriteContainer from '../MemoWriteContainer';
-import renderWithRedux from '../../../utils/test/renderWithRedux';
+import renderWithRedux from '../../../utils/__test__/renderWithRedux';
 import * as memoAPI from '../../../lib/api/memo';
 
 jest.mock('../../../lib/api/memo');
