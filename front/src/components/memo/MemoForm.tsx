@@ -1,5 +1,8 @@
-import React, { EventHandler } from 'react';
+import { FormEvent, useEffect } from 'react';
 import styled from 'styled-components';
+import { message } from 'antd';
+import { useNavigate } from 'react-router';
+import useMemoForm from '../../hooks/useMemoForm';
 
 const MemoFormBlock = styled.form`
   height: 100vh;
@@ -56,16 +59,47 @@ interface Memo {
 }
 
 export type MemoFormProps = {
-  onSubmit: EventHandler<React.MouseEvent>;
-  onChange: EventHandler<
-    React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  >;
-  form: Memo;
+  initForm?: Memo;
 };
 
-const MemoForm = ({ onSubmit, form, onChange }: MemoFormProps) => {
+const MemoForm = ({ initForm }: MemoFormProps) => {
+  const { form, memo, memoError, setForm, saveMemo } = useMemoForm(initForm);
+  const navigate = useNavigate();
+
+  const onChange = ({ target }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = target;
+
+    setForm({
+      ...form,
+      [name]: value
+    });
+  };
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!form.title || !form.content) {
+      message.warning('제목 또는 내용을 입력하세요.');
+      return false;
+    }
+
+    saveMemo();
+  };
+
+  useEffect(() => {
+    if (memoError) {
+      message.error('저장에 실패하였습니다.');
+    }
+  }, [memoError]);
+
+  useEffect(() => {
+    if (memo) {
+      navigate(`/memos/${memo.id}`);
+    }
+  }, [memo]);
+
   return (
-    <MemoFormBlock>
+    <MemoFormBlock onSubmit={onSubmit}>
       <div className="title">
         <label htmlFor="title">제목</label>
         <input
@@ -85,9 +119,7 @@ const MemoForm = ({ onSubmit, form, onChange }: MemoFormProps) => {
         />
       </div>
       <div className="buttons">
-        <button type="button" onClick={onSubmit}>
-          생성
-        </button>
+        <button type="submit">생성</button>
       </div>
     </MemoFormBlock>
   );

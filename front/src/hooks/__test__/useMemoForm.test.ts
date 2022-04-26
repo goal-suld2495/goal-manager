@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import { mocked } from 'jest-mock';
+import { screen } from '@testing-library/react';
 import useMemoForm from '../useMemoForm';
 import * as memoApi from '../../lib/api/memo';
 import { Form, Memo } from '../../types';
@@ -35,6 +36,7 @@ describe('useMemoForm', () => {
       wrapper: RecoilRoot,
     });
 
+    act(() => result.current.setForm(form));
     result.current.saveMemo();
 
     await waitForNextUpdate();
@@ -43,6 +45,7 @@ describe('useMemoForm', () => {
   });
 
   it('메모 저장에 실패한다.', async () => {
+    const form: Form = { title: '제목', content: '내용' };
     mockedMemoApi.saveMemo.mockRejectedValue({
       data: {
         error: true,
@@ -54,6 +57,7 @@ describe('useMemoForm', () => {
       wrapper: RecoilRoot,
     });
 
+    act(() => result.current.setForm(form));
     result.current.saveMemo();
 
     await waitForNextUpdate();
