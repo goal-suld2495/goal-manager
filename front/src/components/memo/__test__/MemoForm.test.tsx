@@ -9,6 +9,10 @@ import useMemoForm from '../../../hooks/useMemoForm';
 jest.mock('../../../hooks/useMemoForm');
 const mockUseMemoForm = mocked(useMemoForm);
 
+// TODO
+// write 페이지에 접속하자마자 detail 페이지로 이동되는 문제가 존재하여
+// 코드를 수정했더니 테스트 코드가 실패한다.
+// 이부분을 수정완료 후 mui로 리팩토링을 진행하자
 describe('MemoForm', () => {
   const initUseMemoForm = () => {
     const result = useMemoForm();
@@ -135,28 +139,30 @@ describe('MemoForm', () => {
     expect(fn).toBeCalled();
   });
 
-  // it('저장 액션에 실패했다면 실패와 관련된 에러 메시지를 출력한다.', async () => {
-  //   const result = initUseMemoForm();
+  it('저장 액션에 실패했다면 실패와 관련된 에러 메시지를 출력한다.', async () => {
+    const result = initUseMemoForm();
 
-  //   mockUseMemoForm.mockImplementation(() => ({
-  //     ...result,
-  //     memoError: new Error('Fail Save')
-  //   }));
+    mockUseMemoForm.mockImplementation(() => ({
+      ...result,
+      memoError: new Error('Fail Save')
+    }));
 
-  //   setup();
+    setup({
+      initForm: getInitForm()
+    });
 
-  //   const titleInput = screen.getByLabelText('제목');
-  //   const contentInput = screen.getByPlaceholderText('내용을 입력해 주세요.');
+    const titleInput = screen.getByLabelText('제목');
+    const contentInput = screen.getByPlaceholderText('내용을 입력해 주세요.');
 
-  //   userEvent.type(titleInput, '제목');
-  //   userEvent.type(contentInput, '내용');
+    userEvent.type(titleInput, '제목');
+    userEvent.type(contentInput, '내용');
 
-  //   const button = screen.getByRole('button', { name: '생성' });
-  //   userEvent.click(button);
+    const button = screen.getByRole('button', { name: '생성' });
+    userEvent.click(button);
 
-  //   expect(
-  //     await screen.findByText('저장에 실패하였습니다.')
-  //   ).toBeInTheDocument();
-  //   expect(result.saveMemo).toBeCalled();
-  // });
+    expect(
+      await screen.findByText('저장에 실패하였습니다.')
+    ).toBeInTheDocument();
+    expect(result.saveMemo).toBeCalled();
+  });
 });

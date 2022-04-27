@@ -80,7 +80,7 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
 
     if (!form.title || !form.content) {
       message.warning('제목 또는 내용을 입력하세요.');
-      return false;
+      return;
     }
 
     saveMemo();
@@ -93,7 +93,7 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
   }, [memoError]);
 
   useEffect(() => {
-    if (memo) {
+    if (memo && memo.id) {
       navigate(`/memos/${memo.id}`);
     }
   }, [memo]);
