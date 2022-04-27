@@ -1,7 +1,7 @@
-import MemoWriteContainer from '../containers/memo/MemoWriteContainer';
+import MemoForm from '../components/memo/MemoForm';
 
 const MemoWrite = () => {
-  return <MemoWriteContainer />;
+  return <MemoForm />;
 };
 
 export default MemoWrite;

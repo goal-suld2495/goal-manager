@@ -9,10 +9,6 @@ import useMemoForm from '../../../hooks/useMemoForm';
 jest.mock('../../../hooks/useMemoForm');
 const mockUseMemoForm = mocked(useMemoForm);
 
-// TODO
-// write 페이지에 접속하자마자 detail 페이지로 이동되는 문제가 존재하여
-// 코드를 수정했더니 테스트 코드가 실패한다.
-// 이부분을 수정완료 후 mui로 리팩토링을 진행하자
 describe('MemoForm', () => {
   const initUseMemoForm = () => {
     const result = useMemoForm();
