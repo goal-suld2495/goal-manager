@@ -6,4 +6,8 @@ export const saveMemo = (form: Form): Promise<AxiosResponse<Memo>> => {
   return apiClient.post('api/memos', form);
 };
 
+export const fetchMemo = (id: string): Promise<AxiosResponse<Memo>> => {
+  return apiClient.post(`api/memos/${id}`);
+};
+
 export default {};
