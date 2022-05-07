@@ -1,8 +1,9 @@
-import { FormEvent, useEffect } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { message } from 'antd';
 import { useNavigate } from 'react-router';
+import { Button } from '@mui/material';
 import useMemoForm from '../../hooks/useMemoForm';
+import MessageBox from '../common/MessageBox';
 
 const MemoFormBlock = styled.form`
   height: 100vh;
@@ -65,6 +66,9 @@ export type MemoFormProps = {
 const MemoForm = ({ initForm }: MemoFormProps) => {
   const { form, memo, memoError, setForm, saveMemo } = useMemoForm(initForm);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const ref = React.createRef<HTMLDivElement>();
 
   const onChange = ({ target }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = target;
@@ -79,7 +83,8 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
     e.preventDefault();
 
     if (!form.title || !form.content) {
-      message.warning('제목 또는 내용을 입력하세요.');
+      setMessage('제목 또는 내용을 입력하세요.');
+      setOpen(true);
       return;
     }
 
@@ -88,7 +93,8 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
 
   useEffect(() => {
     if (memoError) {
-      message.error('저장에 실패하였습니다.');
+      setMessage('저장에 실패하였습니다.');
+      setOpen(true);
     }
   }, [memoError]);
 
@@ -97,6 +103,10 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
       navigate(`/memos/${memo.id}`);
     }
   }, [memo]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <MemoFormBlock onSubmit={onSubmit}>
@@ -119,8 +129,13 @@ const MemoForm = ({ initForm }: MemoFormProps) => {
         />
       </div>
       <div className="buttons">
-        <button type="submit">생성</button>
+        <Button variant="contained" type="submit">생성</Button>
       </div>
+      {message && (
+        <MessageBox open={open} onClose={handleClose}>
+          <MessageBox.Error ref={ref}>{message}</MessageBox.Error>
+        </MessageBox>
+      )}
     </MemoFormBlock>
   );
 };
