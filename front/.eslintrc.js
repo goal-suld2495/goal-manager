@@ -19,6 +19,7 @@ module.exports = {
     project: ['./tsconfig.json'],
   },
   plugins: ['jsx-a11y', '@typescript-eslint', 'jest', 'jest-react'],
+  ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
   rules: {
     '@typescript-eslint/no-empty-function': [
       'error',
