@@ -1,4 +1,4 @@
-import { atom, selectorFamily } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
 import { Form, Memo } from '../types';
 import * as memoApi from '../lib/api/memo';
 
@@ -39,4 +39,18 @@ export const CurrentMemoState = selectorFamily<Memo, string>({
       throw new Error('');
     }
   },
+});
+
+export const memoListStateTrigger = atom({
+  key: 'memoListStateTrigger',
+  default: 0,
+});
+
+export const getMemoListState = selector<Memo[]>({
+  key: 'memoListState',
+  get: async ({ get }) => {
+    const response = await memoApi.fetchMemoList();
+    get(memoListStateTrigger);
+    return response.data;
+  }
 });

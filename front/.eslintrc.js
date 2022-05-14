@@ -72,6 +72,7 @@ module.exports = {
     'function-paren-newline': 0,
     'import/no-extraneous-dependencies': 0,
     'react/prop-types': 0,
-    'react/require-default-props': 0
+    'react/require-default-props': 0,
+    'no-restricted-syntax': 0
   },
 };
